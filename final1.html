@@ -1043,6 +1043,9 @@
     const root = document.getElementById('fpbuildProjectDeck');
     if (!root) return;
 
+    if (root.dataset.fpbuildInitialized === 'true') return;
+    root.dataset.fpbuildInitialized = 'true';
+    
     const work = root.querySelector('.fpbuild-work');
     const result = root.querySelector('.fpbuild-result');
     const pool = root.querySelector('.fpbuild-pool');
