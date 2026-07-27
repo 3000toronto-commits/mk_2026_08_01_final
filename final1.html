@@ -651,19 +651,27 @@
   }
 
   .fpbuild-slides {
-    min-height: 990px;
-    overflow: visible;
-  }
+  min-height: 390px;
+  overflow: visible;
+}
 
-  .fpbuild-slide {
-    display: none;
-    min-height: 990px;
-    padding: 18px;
-    border-radius: 18px;
-    background: rgba(255, 255, 255, .64);
-    overflow: visible;
-  }
+.fpbuild-slide {
+  display: none;
+  min-height: 390px;
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .64);
+  overflow: visible;
+}
 
+.fpbuild-wrap.fpbuild-stage-two .fpbuild-slides {
+  min-height: 990px;
+}
+
+.fpbuild-wrap.fpbuild-stage-two .fpbuild-slide {
+  min-height: 990px;
+}
+  
   .fpbuild-slide.fpbuild-slide-active {
     display: block;
   }
@@ -677,16 +685,16 @@
   }
 
   .fpbuild-stage1-drop {
-    min-height: 900px;
-    padding: 12px;
-    border: 2px dashed #CADDDF;
-    border-radius: 16px;
-    background: rgba(223, 242, 243, .58);
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    align-content: start;
-  }
+  min-height: 300px;
+  padding: 12px;
+  border: 2px dashed #CADDDF;
+  border-radius: 16px;
+  background: rgba(223, 242, 243, .58);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  align-content: start;
+}
 
   .fpbuild-stage1-drop:empty::before {
     content: attr(data-placeholder);
@@ -1037,9 +1045,9 @@
     }
 
     .fpbuild-stage1-drop {
-      grid-template-columns: 1fr;
-      min-height: 900px;
-    }
+  grid-template-columns: 1fr;
+  min-height: 300px;
+}
 
     .fpbuild-zone-label {
       width: 100px;
