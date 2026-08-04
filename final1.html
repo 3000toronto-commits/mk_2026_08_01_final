@@ -1217,50 +1217,90 @@
       prepareStage2();
     }
 
-    function checkStage2() {
-      clearMarks();
+function checkStage2() {
+  clearMarks();
 
-      const cards = Array.from(root.querySelectorAll('.fpbuild-card'));
-      let allPlaced = true;
-      let allCorrect = true;
+  const activeSlide = root.querySelector(
+    '.fpbuild-slide.fpbuild-slide-active'
+  );
 
-      cards.forEach(function (card) {
-        const parentSlot = card.closest('.fpbuild-slot');
+  if (!activeSlide) return;
 
-        if (!parentSlot) {
-          allPlaced = false;
-          allCorrect = false;
-          card.classList.add('fpbuild-wrong');
-          return;
-        }
+  const cards = Array.from(
+    activeSlide.querySelectorAll('.fpbuild-card')
+  );
 
-        const cardGroup = card.dataset.group || card.dataset.slot;
-        const slotGroup = parentSlot.dataset.group || parentSlot.dataset.slot;
+  const activeSlots = Array.from(
+    activeSlide.querySelectorAll('.fpbuild-slot')
+  );
 
-        if (cardGroup !== slotGroup) {
-          allCorrect = false;
-          parentSlot.classList.add('fpbuild-wrong');
-          card.classList.add('fpbuild-wrong');
-        }
-      });
+  let allPlaced = true;
+  let allCorrect = true;
 
-      slots.forEach(function (slot) {
-        if (!slot.querySelector('.fpbuild-card')) {
-          allPlaced = false;
-          allCorrect = false;
-          slot.classList.add('fpbuild-wrong');
-        }
-      });
+  /*
+   * Проверяем только карточки активного слайда.
+   */
+  cards.forEach(function (card) {
+    const parentSlot = card.closest('.fpbuild-slot');
 
-      if (!allPlaced) {
-        setMessage('Не все данные размещены внутри слайдов. Пустые ячейки и неразмещенные карточки подсвечены оранжевым.', true);
-        return;
-      }
+    /*
+     * Карточка осталась в блоке
+     * «Данные этого слайда».
+     */
+    if (!parentSlot) {
+      allPlaced = false;
+      allCorrect = false;
+      card.classList.add('fpbuild-wrong');
+      return;
+    }
 
-      if (!allCorrect) {
-        setMessage('Есть ошибки в расположении данных. Оранжевым подсвечены карточки и ячейки, которые нужно переставить.', true);
-        return;
-      }
+    const cardGroup =
+      card.dataset.group ||
+      card.dataset.slot;
+
+    const slotGroup =
+      parentSlot.dataset.group ||
+      parentSlot.dataset.slot;
+
+    if (cardGroup !== slotGroup) {
+      allCorrect = false;
+      parentSlot.classList.add('fpbuild-wrong');
+      card.classList.add('fpbuild-wrong');
+    }
+  });
+
+  /*
+   * Проверяем только ячейки активного слайда.
+   */
+  activeSlots.forEach(function (slot) {
+    if (!slot.querySelector('.fpbuild-card')) {
+      allPlaced = false;
+      allCorrect = false;
+      slot.classList.add('fpbuild-wrong');
+    }
+  });
+
+  if (!allPlaced) {
+    setMessage(
+      'На этом слайде размещены не все данные. Пустые ячейки и неразмещенные карточки подсвечены оранжевым',
+      true
+    );
+    return;
+  }
+
+  if (!allCorrect) {
+    setMessage(
+      'На этом слайде есть ошибки. Переставьте оранжевые карточки в подходящие ячейки',
+      true
+    );
+    return;
+  }
+
+  setMessage(
+    'На этом слайде все верно',
+    false
+  );
+}
 
       work.classList.remove('fpbuild-active');
       result.classList.add('fpbuild-active');
