@@ -536,7 +536,7 @@
   }
 
   .fpbuild-pool:empty::before {
-    content: "Все карточки размещены. Можно вернуть сюда карточку со слайда.";
+    content: "Все карточки размещены. Можно вернуть сюда карточку со слайда";
     color: #5d7f80;
     font-size: 13px;
     font-weight: 700;
@@ -1184,7 +1184,7 @@
 
       taskBadge.textContent = 'Этап 2';
       taskText.textContent = 'Теперь разместите данные внутри каждого слайда: заголовок, основная часть, вывод, риск или таблица. В основной части порядок карточек не важен.';
-      checkBtn.textContent = 'Проверить слайды';
+      checkBtn.textContent = 'Проверить слайд';
 
       stage1Drops.forEach(function (drop) {
         const slideId = drop.dataset.slideDrop;
@@ -1360,7 +1360,6 @@ function checkStage2() {
     enableDrop(pool, function (card) {
       if (stage !== 1) return;
       moveCardToContainer(card, pool);
-      setMessage('Карточка возвращена в зону данных. Теперь ее можно перенести на другой слайд', false);
     });
 
     stage1Drops.forEach(function (drop) {
