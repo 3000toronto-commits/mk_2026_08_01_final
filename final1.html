@@ -1321,10 +1321,6 @@ function checkStage2() {
   );
 }
 
-      work.classList.remove('fpbuild-active');
-      result.classList.add('fpbuild-active');
-    }
-
     tabs.forEach(function (tab) {
       tab.addEventListener('click', function () {
         switchSlide(tab.dataset.target);
@@ -1364,7 +1360,7 @@ function checkStage2() {
     enableDrop(pool, function (card) {
       if (stage !== 1) return;
       moveCardToContainer(card, pool);
-      setMessage('Карточка возвращена в зону данных. Теперь ее можно перенести на другой слайд.', false);
+      setMessage('Карточка возвращена в зону данных. Теперь ее можно перенести на другой слайд', false);
     });
 
     stage1Drops.forEach(function (drop) {
@@ -1378,7 +1374,7 @@ function checkStage2() {
       enableDrop(bank, function (card, targetBank) {
         if (stage !== 2) return;
         moveCardToContainer(card, targetBank);
-        setMessage('Карточка возвращена в блок «Данные этого слайда». Теперь ее можно поставить в другую ячейку.', false);
+        setMessage('Карточка возвращена в блок «Данные этого слайда». Теперь ее можно поставить в другую ячейку', false);
       });
     });
 
