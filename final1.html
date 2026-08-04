@@ -826,11 +826,46 @@
     box-shadow: none;
   }
 
-  .fpbuild-risk-table {
-    display: grid;
-    grid-template-columns: 1fr 1.4fr 1.35fr;
-    gap: 8px;
-  }
+.fpbuild-risk-table {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+  grid-auto-rows: auto;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.fpbuild-risk-table .fpbuild-table-head,
+.fpbuild-risk-table .fpbuild-table-slot {
+  width: 100%;
+  min-width: 0;
+}
+
+.fpbuild-table-head {
+  padding: 9px 10px;
+  border-radius: 12px;
+  background: #367879;
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1.1;
+  font-weight: 800;
+  text-align: center;
+}
+
+.fpbuild-table-slot {
+  min-height: 98px;
+  padding: 8px;
+}
+
+.fpbuild-table-slot .fpbuild-card {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  padding: 12px 13px;
+  font-size: 14.5px;
+  line-height: 1.25;
+  box-shadow: none;
+  overflow-wrap: break-word;
+}
 
   .fpbuild-table-head {
     padding: 9px 10px;
@@ -997,11 +1032,7 @@
     }
 
     .fpbuild-risk-table {
-      grid-template-columns: 1fr;
-    }
-
-    .fpbuild-table-head {
-      display: none;
+      grid-template-columns: minmax(0, .9fr) minmax(0, 1.4fr);
     }
 
     .fpbuild-two-cols {
