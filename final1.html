@@ -320,9 +320,7 @@
 </div>
 
 <div class="fpbuild-footer">
-  <div class="fpbuild-message" aria-live="polite">
-    После проверки неверные карточки подсветятся оранжевым
-  </div>
+  <div class="fpbuild-message" aria-live="polite"></div>
   <button class="fpbuild-check" type="button">Проверить распределение</button>
 </div>
 
@@ -998,6 +996,13 @@
     line-height: 1.45;
   }
 
+.fpbuild-message.fpbuild-message-empty {
+  min-height: 0;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+}
+  
   @media (max-width: 760px) {
     .fpbuild-wrap {
       width: 100%;
@@ -1083,10 +1088,12 @@
     let draggedCard = null;
     let selectedCard = null;
     let autoScrollFrame = null;
+    const slideMessages = new Map();
 
     function setMessage(text, isError) {
-      message.textContent = text;
-      message.classList.toggle('fpbuild-error', Boolean(isError));
+    message.textContent = text || '';
+    message.classList.toggle('fpbuild-error', Boolean(isError));
+    message.classList.toggle('fpbuild-message-empty', !text);
     }
 
     function clearMarks() {
@@ -1100,26 +1107,54 @@
     }
 
     function switchSlide(slideId) {
-      tabs.forEach(function (tab) {
-        tab.classList.toggle('fpbuild-tab-active', tab.dataset.target === slideId);
-      });
+  tabs.forEach(function (tab) {
+    tab.classList.toggle(
+      'fpbuild-tab-active',
+      tab.dataset.target === slideId
+    );
+  });
 
-      slides.forEach(function (slide) {
-        slide.classList.toggle('fpbuild-slide-active', slide.dataset.slide === slideId);
-      });
+  slides.forEach(function (slide) {
+    slide.classList.toggle(
+      'fpbuild-slide-active',
+      slide.dataset.slide === slideId
+    );
+  });
 
-      selectedCard = null;
-      root.querySelectorAll('.fpbuild-card').forEach(function (card) {
-        card.classList.remove('fpbuild-selected');
-      });
-    }
+  selectedCard = null;
+
+  root.querySelectorAll('.fpbuild-card').forEach(function (card) {
+    card.classList.remove('fpbuild-selected');
+  });
+
+  if (stage === 2 && slideMessages.has(slideId)) {
+    const savedMessage = slideMessages.get(slideId);
+
+    setMessage(
+      savedMessage.text,
+      savedMessage.isError
+    );
+  } else {
+    setMessage('', false);
+  }
+}
 
     function moveCardToContainer(card, container) {
-      container.appendChild(card);
-      card.classList.remove('fpbuild-selected');
-      selectedCard = null;
-      clearMarks();
+  const slide = container.closest('.fpbuild-slide');
+
+  container.appendChild(card);
+  card.classList.remove('fpbuild-selected');
+  selectedCard = null;
+  clearMarks();
+
+  if (stage === 2 && slide) {
+    slideMessages.delete(slide.dataset.slide);
+
+    if (slide.classList.contains('fpbuild-slide-active')) {
+      setMessage('', false);
     }
+  }
+}
 
     function getBankForSlide(slide) {
       return slide.querySelector('.fpbuild-slide-bank');
@@ -1245,6 +1280,8 @@ function checkStage2() {
 
   if (!activeSlide) return;
 
+  const slideId = activeSlide.dataset.slide;
+
   const cards = Array.from(
     activeSlide.querySelectorAll('.fpbuild-card')
   );
@@ -1256,16 +1293,9 @@ function checkStage2() {
   let allPlaced = true;
   let allCorrect = true;
 
-  /*
-   * Проверяем только карточки активного слайда.
-   */
   cards.forEach(function (card) {
     const parentSlot = card.closest('.fpbuild-slot');
 
-    /*
-     * Карточка осталась в блоке
-     * «Данные этого слайда».
-     */
     if (!parentSlot) {
       allPlaced = false;
       allCorrect = false;
@@ -1288,9 +1318,6 @@ function checkStage2() {
     }
   });
 
-  /*
-   * Проверяем только ячейки активного слайда.
-   */
   activeSlots.forEach(function (slot) {
     if (!slot.querySelector('.fpbuild-card')) {
       allPlaced = false;
@@ -1300,25 +1327,39 @@ function checkStage2() {
   });
 
   if (!allPlaced) {
-    setMessage(
-      'На этом слайде размещены не все данные. Пустые ячейки и неразмещенные карточки подсвечены оранжевым',
-      true
-    );
+    const text =
+      'На этом слайде размещены не все данные. Пустые ячейки и неразмещенные карточки подсвечены оранжевым';
+
+    slideMessages.set(slideId, {
+      text: text,
+      isError: true
+    });
+
+    setMessage(text, true);
     return;
   }
 
   if (!allCorrect) {
-    setMessage(
-      'На этом слайде есть ошибки. Переставьте оранжевые карточки в подходящие ячейки',
-      true
-    );
+    const text =
+      'На этом слайде есть ошибки. Переставьте оранжевые карточки в подходящие ячейки';
+
+    slideMessages.set(slideId, {
+      text: text,
+      isError: true
+    });
+
+    setMessage(text, true);
     return;
   }
 
-  setMessage(
-    'На этом слайде все верно',
-    false
-  );
+  const text = 'На этом слайде все верно';
+
+  slideMessages.set(slideId, {
+    text: text,
+    isError: false
+  });
+
+  setMessage(text, false);
 }
 
     tabs.forEach(function (tab) {
